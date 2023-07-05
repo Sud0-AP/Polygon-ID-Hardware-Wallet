@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Authentication Page</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #1c1c1c;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+    }
+  
+    h1 {
+      margin-top: 0;
+    }
+  
+    input[type="password"] {
+      padding: 10px;
+      margin-bottom: 10px;
+      width: 250px;
+      border: 1px solid #666666;
+      border-radius: 4px;
+      background-color: #2f2f2f;
+      color: #ffffff;
+    }
+  
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      background-color: #4b0082;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  
+    button:hover {
+      background-color: #800080;
+    }
+  
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #1c1c1c;
+    }
+
+    #nextButton {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Authentication Page</h1>
+  <input type="password" id="passwordInput" placeholder="Enter password">
+  <button id="authenticateButton">Authenticate</button>
+  <div id="result"></div>
+
+  <script>
+    function decryptPrivateKey(encryptedPrivateKey, password, decryptSalt, decryptIV) {
+      const key = CryptoJS.PBKDF2(password, CryptoJS.enc.Hex.parse(decryptSalt), {
+        keySize: 256 / 32,
+        iterations: 1000,
+      });
+
+      const decrypted = CryptoJS.AES.decrypt(encryptedPrivateKey, key, {
+        iv: CryptoJS.enc.Hex.parse(decryptIV),
+      });
+
+      return decrypted.toString(CryptoJS.enc.Utf8);
+    }
+
+    function navigateToQRCodePage() {
+      location.href = "qrcode.html";
+    }
+
+    $(document).ready(function() {
+      $("#authenticateButton").click(function() {
+        const password = $("#passwordInput").val();
+        localStorage.setItem("privKey", document.getElementById("result").innerText);
+        console.log(localStorage.getItem("privKey"))//store the private key in local storage
+        navigateToQRCodePage();
+      });
+    });
+  </script>
+</body>
+</html>

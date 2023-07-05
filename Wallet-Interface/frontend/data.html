@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Page</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #1c1c1c;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+    }
+  
+    h1 {
+      margin-top: 0;
+    }
+  
+    #password {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+  
+    #data {
+      white-space: pre-wrap;
+      margin-bottom: 20px;
+    }
+  
+    #qrcode {
+      margin-bottom: 20px;
+    }
+  
+    #proofButton {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      background-color: #4b0082;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  
+    #proofButton:hover {
+      background-color: #800080;
+    }
+  </style>
+</head>
+<body>
+  <h1>Data Page</h1>
+  <div id="password"></div>
+  <div id="data"></div>
+  <div id="qrcode"></div>
+  <button id="proofButton">Generate Proof</button>
+
+  <script>
+    // JavaScript variables to store the password, server data, and QR code data
+    var password = "";
+    var serverData = "";
+    var qrCodeData = "";
+
+    // Function to generate the proof
+    function generateProof() {
+      // Your code to generate the proof goes here
+      // ...
+
+      console.log("Proof generated!");
+    }
+
+    // Function to update the page with the collected data
+    function updatePage() {
+      // Update the password
+      document.getElementById("password").innerText = "Password: " + password;
+
+      // Update the server data
+      document.getElementById("data").innerText = "Server Data:\n" + serverData;
+
+      // Update the QR code data
+      document.getElementById("qrcode").innerText = "QR Code Data:\n" + qrCodeData;
+    }
+
+    // Event listener for the proof button click
+    document.getElementById("proofButton").addEventListener("click", generateProof);
+
+    // Call the updatePage function when the page is loaded
+    window.addEventListener("load", updatePage);
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QR Code Scanner</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #1c1c1c;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    #reader {
+      width: 300px;
+      height: 300px;
+      margin-bottom: 20px;
+    }
+
+    #result {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      max-width: 90%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    #proofButton {
+      display: none;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      background-color: #4b0082;
+      color: #ffffff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #proofButton:hover {
+      background-color: #800080;
+    }
+  </style>
+</head>
+<body>
+  <h3>Wallet imported! DID: <span id="did">did:iden3:polygon:mumbai:wzokvZ6kMoocKJuSbftdZxTD6qvayGpJb3m4FVXth</span> </h1>
+  <div id="reader"></div>
+  <p id="result"></p>
+  <button id="proofButton">Generate Proof</button>
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  
+  <script>
+    $(document).ready(function() {
+        const inputString = localStorage.getItem("privKey");
+        // Send the input string to the server for processing
+        $.ajax({
+          url: 'http://localhost:6969/process',
+          method: 'POST',
+          data: JSON.stringify({ inputString }), // Convert the input string to JSON format
+          contentType: 'application/json',
+          success: function(response) {
+            const processedString = response.processedString; // Access the processed string from the response
+
+            // Display the processed string on the frontend
+            $('#did').text(processedString);
+          },
+          error: function() {
+            console.error('Error occurred during processing');
+          }
+        });
+      
+    });
+  </script>
+  <script>
+    const reader = document.getElementById("reader");
+    const resultDiv = document.getElementById("result");
+    const proofButton = document.getElementById("proofButton");
+
+    function onScanSuccess(decodedText, decodedResult) {
+      resultDiv.innerText = decodedText;
+      reader.style.display = "none";
+      proofButton.style.display = "block";
+    }
+
+    function generateProof() {
+      const resultText = resultDiv.innerText;
+      localStorage.setItem("requestData", resultText);//store the data in local storage
+    }
+
+    let config = {
+      supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_FILE],
+    };
+
+    let html5QrcodeScanner = new Html5QrcodeScanner("reader", config, false);
+    html5QrcodeScanner.render(onScanSuccess);
+
+    proofButton.addEventListener("click", generateProof);
+  </script>
+</body>
+</html>
